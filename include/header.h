@@ -1,4 +1,4 @@
-
+#include <iostream>
 
 
 struct Node
@@ -9,6 +9,9 @@ struct Node
 public:
 	Node() : _data(0), _left(nullptr), _rigth(nullptr) {};
 	Node(const int data) : _data(data), _left(nullptr), _rigth(nullptr) {};
+	Node*& getLeftTree();
+	Node*& getRigthTree();
+	int getData() const;
 };
 
 class Tree
@@ -19,13 +22,14 @@ public:
 	Tree(const Tree& other);
 	~Tree();
 	void print();
+	void printTree(const Node* root, int level);
 	Tree& operator=(const Tree& other);
 	bool insert(int key);
-	bool insertKey(Node* root, int key);
+	bool insertKey(Node*& root, int key);
 	bool contains(int key);
 	bool erase(int key);
 	void copyTree(Node* newNode, const Node* otherNode);
-	void deleteTree(Node* root);
+	void deleteTree(Node*& root);
 };
 
 Tree::Tree() : _root(nullptr) {}
@@ -56,14 +60,14 @@ Tree::~Tree()
 }
 
 
-void Tree::deleteTree(Node* root)
+void Tree::deleteTree(Node*& root)
 {
 	if (root == nullptr) return;
 
 	if (root->_left != nullptr || root->_rigth != nullptr)
 	{
-		deleteTree(_root->_left);
-		deleteTree(_root->_rigth);
+		deleteTree(root->_left);
+		deleteTree(root->_rigth);
 	}
 	delete root;
 	root = nullptr;
@@ -80,12 +84,20 @@ Tree& Tree::operator=(const Tree& other)
 	return *this;
 }
 
+Node*& Node::getLeftTree() { return _left; }
+Node*& Node::getRigthTree() { return _rigth; }
+
+int Node::getData() const
+{
+	return _data;
+}
+
 bool Tree::insert(int key)
 {
 	return insertKey(_root, key);
 }
 
-bool Tree::insertKey(Node* root, int key)
+bool Tree::insertKey(Node*& root, int key)
 {
 	if (root == nullptr)
 	{
@@ -93,9 +105,10 @@ bool Tree::insertKey(Node* root, int key)
 		return true;
 	}
 
-	if (key <= root->_data)
-		return insertKey(root->_left, key);
-	else if (key > root->_data)
-		return insertKey(root->_rigth, key);
-	return false;
+	if (key <= root->getData())
+		return insertKey(root->getLeftTree(), key);
+	else if (key > root->getData())
+		return insertKey(root->getRigthTree(), key);
+	return false; 
 }
+
