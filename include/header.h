@@ -4,11 +4,12 @@
 struct Node
 {
 	int _data;
-	Node* _left;
-	Node* _rigth;
+	
 public:
-	Node() : _data(0), _left(nullptr), _rigth(nullptr) {};
-	Node(const int data) : _data(data), _left(nullptr), _rigth(nullptr) {};
+	Node* _left;
+	Node* _right;
+	Node() : _data(0), _left(nullptr), _right(nullptr) {};
+	Node(const int data) : _data(data), _left(nullptr), _right(nullptr) {};
 	Node*& getLeftTree();
 	Node*& getRigthTree();
 	int getData() const;
@@ -16,7 +17,6 @@ public:
 
 class Tree
 {
-	Node* _root;
 	bool insertKey(Node*& root, int key);
 	bool containData(Node*& root, int key);
 	void copyTree(Node*& newNode, const Node* otherNode);
@@ -25,6 +25,8 @@ class Tree
 	bool deleteKey(Node*& root, int key);
 
 public:
+	Node* _root;
+
 	Tree();
 	Tree(const Tree& other);
 	~Tree();
@@ -52,7 +54,7 @@ void Tree::copyTree(Node*& newNode, const Node* otherNode)
 	}
 
 	newNode = new Node(otherNode->_data);
-	copyTree(newNode->_rigth, otherNode->_rigth);
+	copyTree(newNode->_right, otherNode->_right);
 	copyTree(newNode->_left, otherNode->_left);
 }
 
@@ -67,10 +69,10 @@ void Tree::deleteTree(Node*& root)
 {
 	if (root == nullptr) return;
 
-	if (root->_left != nullptr || root->_rigth != nullptr)
+	if (root->_left != nullptr || root->_right != nullptr)
 	{
 		deleteTree(root->_left);
-		deleteTree(root->_rigth);
+		deleteTree(root->_right);
 	}
 	delete root;
 	root = nullptr;
@@ -88,7 +90,7 @@ Tree& Tree::operator=(const Tree& other)
 }
 
 Node*& Node::getLeftTree() { return _left; }
-Node*& Node::getRigthTree() { return _rigth; }
+Node*& Node::getRigthTree() { return _right; }
 
 int Node::getData() const
 {
@@ -123,9 +125,9 @@ void Tree::print()
 void Tree::printTree(const Node* root) 
 {
 	if (root == nullptr) return;
-	std::cout << root->getData() << " ";
 	printTree(root->_left);
-	printTree(root->_rigth);
+	std::cout << root->getData() << " ";
+	printTree(root->_right);
 }
 
 
@@ -162,7 +164,7 @@ bool Tree::deleteKey(Node*& root, int key)
 		return deleteKey(root->getRigthTree(), key);
 	else
 	{
-		if (root->_left != nullptr && root->_rigth != nullptr)
+		if (root->_left != nullptr && root->_right != nullptr)
 		{
 			delete root;
 			root = nullptr;
@@ -171,7 +173,7 @@ bool Tree::deleteKey(Node*& root, int key)
 		else if (root->_left == nullptr)
 		{
 			Node* tmp = root;
-			root = root->_rigth;
+			root = root->_right;
 			delete tmp;
 			return true;
 		}
@@ -184,7 +186,7 @@ bool Tree::deleteKey(Node*& root, int key)
 		}
 		else
 		{
-			Node* tmp = root->_rigth;
+			Node* tmp = root->_right;
 
 			while (tmp->_left != nullptr)
 				tmp = tmp->_left;
