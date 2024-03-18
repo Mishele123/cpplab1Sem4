@@ -164,7 +164,7 @@ bool Tree::deleteKey(Node*& root, int key)
 		return deleteKey(root->getRigthTree(), key);
 	else
 	{
-		if (root->_left != nullptr && root->_right != nullptr)
+		if (root->_left == nullptr && root->_right == nullptr)
 		{
 			delete root;
 			root = nullptr;

@@ -10,6 +10,7 @@ int main()
 	a.insert(12);
 	a.insert(11);
 	a.insert(13);
+	a.insert(14);
 	a.insert(9);
 	a.insert(8);
 	a.insert(9);
