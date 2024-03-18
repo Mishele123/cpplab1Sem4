@@ -21,6 +21,7 @@ public:
 	void print();
 	Tree& operator=(const Tree& other);
 	bool insert(int key);
+	bool insertKey(Node* root, int key);
 	bool contains(int key);
 	bool erase(int key);
 	void copyTree(Node* newNode, const Node* otherNode);
@@ -77,4 +78,24 @@ Tree& Tree::operator=(const Tree& other)
 		copyTree(_root, other._root);
 	}
 	return *this;
+}
+
+bool Tree::insert(int key)
+{
+	return insertKey(_root, key);
+}
+
+bool Tree::insertKey(Node* root, int key)
+{
+	if (root == nullptr)
+	{
+		root = new Node(key);
+		return true;
+	}
+
+	if (key <= root->_data)
+		return insertKey(root->_left, key);
+	else if (key > root->_data)
+		return insertKey(root->_rigth, key);
+	return false;
 }
