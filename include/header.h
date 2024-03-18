@@ -9,9 +9,6 @@ struct Node
 public:
 	Node() : _data(0), _left(nullptr), _rigth(nullptr) {};
 	Node(const int data) : _data(data), _left(nullptr), _rigth(nullptr) {};
-	int get_key() const;
-	Node** get_left_tree() const;
-	Node** get_rigth_tree() const;
 };
 
 class Tree
@@ -27,6 +24,7 @@ public:
 	bool contains(int key);
 	bool erase(int key);
 	void copyTree(Node* newNode, const Node* otherNode);
+	void deleteTree(Node* root);
 };
 
 Tree::Tree() : _root(nullptr) {}
@@ -49,3 +47,26 @@ void Tree::copyTree(Node* newNode, const Node* otherNode)
 	copyTree(newNode->_rigth, otherNode->_rigth);
 	copyTree(newNode->_left, otherNode->_left);
 }
+
+Tree::~Tree()
+{
+	deleteTree(_root);
+	_root = nullptr;
+}
+
+
+void Tree::deleteTree(Node* root)
+{
+	if (root == nullptr) return;
+
+	if (root->_left != nullptr || root->_rigth != nullptr)
+	{
+		deleteTree(_root->_left);
+		deleteTree(_root->_rigth);
+	}
+	delete root;
+	root = nullptr;
+}
+
+
+
