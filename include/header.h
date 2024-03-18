@@ -22,13 +22,14 @@ public:
 	Tree(const Tree& other);
 	~Tree();
 	void print();
-	void printTree(const Node* root, int level);
+	void printTree(const Node* root);
 	Tree& operator=(const Tree& other);
 	bool insert(int key);
 	bool insertKey(Node*& root, int key);
 	bool contains(int key);
+	bool containData(Node*& root, int key);
 	bool erase(int key);
-	void copyTree(Node* newNode, const Node* otherNode);
+	void copyTree(Node*& newNode, const Node* otherNode);
 	void deleteTree(Node*& root);
 };
 
@@ -40,7 +41,7 @@ Tree::Tree(const Tree& other)
 	copyTree(_root, other._root);
 }
 
-void Tree::copyTree(Node* newNode, const Node* otherNode)
+void Tree::copyTree(Node*& newNode, const Node* otherNode)
 {
 	if (otherNode == nullptr)
 	{
@@ -112,3 +113,34 @@ bool Tree::insertKey(Node*& root, int key)
 	return false; 
 }
 
+void Tree::print() 
+{
+	printTree(_root);
+}
+
+void Tree::printTree(const Node* root) 
+{
+	if (root == nullptr) return;
+	std::cout << root->getData() << " ";
+	printTree(root->_left);
+	printTree(root->_rigth);
+}
+
+
+
+bool Tree::contains(int key)
+{
+	return containData(_root, key);
+}
+
+
+
+bool Tree::containData(Node*& root, int key)
+{
+	if (root == nullptr) return false;
+
+	if (root->getData() == key) return true;
+
+	if (key < root->getData()) return containData(root->getLeftTree(), key);
+	else return containData(root->getRigthTree(), key);
+}
