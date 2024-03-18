@@ -17,20 +17,22 @@ public:
 class Tree
 {
 	Node* _root;
+	bool insertKey(Node*& root, int key);
+	bool containData(Node*& root, int key);
+	void copyTree(Node*& newNode, const Node* otherNode);
+	void printTree(const Node* root);
+	void deleteTree(Node*& root);
+	bool deleteKey(Node*& root, int key);
+
 public:
 	Tree();
 	Tree(const Tree& other);
 	~Tree();
 	void print();
-	void printTree(const Node* root);
 	Tree& operator=(const Tree& other);
 	bool insert(int key);
-	bool insertKey(Node*& root, int key);
 	bool contains(int key);
-	bool containData(Node*& root, int key);
 	bool erase(int key);
-	void copyTree(Node*& newNode, const Node* otherNode);
-	void deleteTree(Node*& root);
 };
 
 Tree::Tree() : _root(nullptr) {}
@@ -143,4 +145,51 @@ bool Tree::containData(Node*& root, int key)
 
 	if (key < root->getData()) return containData(root->getLeftTree(), key);
 	else return containData(root->getRigthTree(), key);
+}
+
+
+bool Tree::erase(int key)
+{
+	return deleteKey(_root, key);
+}
+
+bool Tree::deleteKey(Node*& root, int key)
+{
+	if (root == nullptr) return false;
+	if (key < root->getData())
+		return deleteKey(root->getLeftTree(), key);
+	else if (key > root->getData())
+		return deleteKey(root->getRigthTree(), key);
+	else
+	{
+		if (root->_left != nullptr && root->_rigth != nullptr)
+		{
+			delete root;
+			root = nullptr;
+			return true;
+		}
+		else if (root->_left == nullptr)
+		{
+			Node* tmp = root;
+			root = root->_rigth;
+			delete tmp;
+			return true;
+		}
+		else if (root->_right == nullptr)
+		{
+			Node* tmp = root;
+			root = root->_left;
+			delete tmp;
+			return true;
+		}
+		else
+		{
+			Node* tmp = root->_rigth;
+
+			while (tmp->_left != nullptr)
+				tmp = tmp->_left;
+			root->_data = tmp->getData();
+			return deleteKey(root->getRigthTree(), tmp->getData());
+		}
+	}
 }
