@@ -69,4 +69,12 @@ void Tree::deleteTree(Node* root)
 }
 
 
-
+Tree& Tree::operator=(const Tree& other)
+{
+	if (this != &other)
+	{
+		deleteTree(_root);
+		copyTree(_root, other._root);
+	}
+	return *this;
+}
