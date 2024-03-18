@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.11)
+﻿cmake_minimum_required(VERSION 3.11)
 
 project(functions CXX)
 
@@ -17,7 +17,10 @@ if(MSVC)
     endif()
 endif()
 
+# Объявляем библиотеку
+add_library(functions SHARED "include/header.h" "src/main.cc")
+target_include_directories(functions PUBLIC "include")
 
-# Обьявляем исполняемый файл
+# Объявляем исполняемый файл
 add_executable(main "src/main.cc")
-target_link_libraries(main headers)
+target_link_libraries(main functions)
