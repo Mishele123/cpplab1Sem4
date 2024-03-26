@@ -241,3 +241,26 @@ double Tree::measureSearchTime(size_t num_elements)
 	}
 	return total_time / 1000.0;
 }
+
+double Tree::measureInsertEraseTime(size_t num_elements) {
+	for (size_t i = 0; i < num_elements; ++i) {
+		insert(lcg());
+	}
+	double total_time_add = 0.0;
+	double total_time_remove = 0.0;
+	for (int attempt = 0; attempt < 1000; ++attempt) {
+		int key_to_add = lcg();
+		clock_t start_time_add = clock();
+		insert(key_to_add);
+		clock_t end_time_add = clock();
+		total_time_add += static_cast<double>(end_time_add - start_time_add) / CLOCKS_PER_SEC;
+		int key_to_remove = lcg();
+		clock_t start_time_remove = clock();
+		erase(key_to_remove);
+		clock_t end_time_remove = clock();
+		total_time_remove += static_cast<double>(end_time_remove - start_time_remove) / CLOCKS_PER_SEC;
+	}
+	double avg_time_add = total_time_add / 1000.0;
+	double avg_time_remove = total_time_remove / 1000.0;
+	return (avg_time_add + avg_time_remove) / 2.0;
+}
