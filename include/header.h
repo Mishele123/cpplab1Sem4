@@ -36,7 +36,7 @@ public:
 	bool contains(int key);
 	bool erase(int key);
 	double measureFillTime(size_t num_elements);
-	double measareSearchTime(size_t num_elements);
+	double measureSearchTime(size_t num_elements);
 	double measureInsertEraseTime(size_t num_elements);
 };
 
@@ -224,3 +224,20 @@ double Tree::measureFillTime(size_t num_elements)
 	return total_time / 100.0;
 }
 
+double Tree::measureSearchTime(size_t num_elements)
+{
+	for (size_t i = 0; i < num_elements; i++)
+	{
+		insert(lcg());
+	}
+	double total_time = 0.0;
+	for (int attempt = 0; attempt < 1000; attempt++) 
+	{
+		int key_to_find = lcg();
+		clock_t start_time = clock();
+		contains(key_to_find);
+		clock_t end_time = clock();
+		total_time += static_cast<double>(end_time - start_time) / CLOCKS_PER_SEC;
+	}
+	return total_time / 1000.0;
+}
