@@ -35,6 +35,9 @@ public:
 	bool insert(int key);
 	bool contains(int key);
 	bool erase(int key);
+	double measureFillTime(size_t num_elements);
+	double measareSearchTime(size_t num_elements);
+	double measureInsertEraseTime(size_t num_elements);
 };
 
 Tree::Tree() : _root(nullptr) {}
@@ -195,3 +198,29 @@ bool Tree::deleteKey(Node*& root, int key)
 		}
 	}
 }
+
+size_t lcg()
+{
+	static size_t x = 0;
+	x = (1021 * x + 24631) % 116640;
+	return x;
+}
+
+double Tree::measureFillTime(size_t num_elements)
+{
+	double total_time = 0.0;
+	for (int attempt = 0; attempt < 100; attempt++)
+	{
+		clock_t start_time = clock();
+		for (size_t i = 0; i < num_elements; i++)
+		{
+			insert(lcg());
+		}
+		clock_t end_time = clock();
+		total_time += static_cast<double>(end_time - start_time) / CLOCKS_PER_SEC;
+		deleteTree(_root);
+		_root = nullptr;
+	}
+	return total_time / 100.0;
+}
+
