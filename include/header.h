@@ -17,6 +17,7 @@ public:
 
 class Tree
 {
+	Node* _root;
 	bool insertKey(Node*& root, int key);
 	bool containData(Node*& root, int key);
 	void copyTree(Node*& newNode, const Node* otherNode);
@@ -25,8 +26,7 @@ class Tree
 	bool deleteKey(Node*& root, int key);
 
 public:
-	Node* _root;
-
+	Node* getRoot() const;
 	Tree();
 	Tree(const Tree& other);
 	~Tree();
@@ -39,6 +39,12 @@ public:
 	double measureSearchTime(size_t num_elements);
 	double measureInsertEraseTime(size_t num_elements);
 };
+
+
+Node* Tree::getRoot() const
+{
+	return _root;
+}
 
 Tree::Tree() : _root(nullptr) {}
 
@@ -335,4 +341,21 @@ double measureInsertEraseVector(size_t num_elements)
 	double avg_time_add = total_time_add / 1000.0;
 	double avg_time_remove = total_time_remove / 1000.0;
 	return (avg_time_add + avg_time_remove) / 2.0;
+}
+
+
+// Задача 2
+void mergeHelper(Node* node, Tree& tree)
+{
+	if (node == nullptr) return;
+	tree.insert(node->_data);
+	mergeHelper(node->_left, tree);
+	mergeHelper(node->_right, tree);
+}
+
+Tree mergeTrees(const Tree& tree1, const Tree& tree2) 
+{
+	Tree resultTree(tree1);
+	mergeHelper(tree2.getRoot(), resultTree);
+	return resultTree;
 }
