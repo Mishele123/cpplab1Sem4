@@ -51,6 +51,13 @@ int main()
     Tree resultUnion = mergeTrees(tree1, tree2);
     std::cout << "Union: ";
     resultUnion.print();
+    std::cout << std::endl;
+
+
+    Tree resultd = symmetricDifference(tree1, tree2);
+    std::cout << "symmetricDifference: ";
+    resultd.print();
+
 
 	return 0;
 }

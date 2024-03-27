@@ -359,3 +359,23 @@ Tree mergeTrees(const Tree& tree1, const Tree& tree2)
 	mergeHelper(tree2.getRoot(), resultTree);
 	return resultTree;
 }
+
+void symDiffHelper(Node* node, Tree& otherTree, Tree& resultTree)
+{
+	if (node == nullptr) return;
+	if (!(otherTree.contains(node->_data)))
+	{
+		resultTree.insert(node->_data);
+	}
+	symDiffHelper(node->_left, otherTree, resultTree);
+	symDiffHelper(node->_right, otherTree, resultTree);
+}
+
+Tree symmetricDifference(Tree& tree1, Tree& tree2) 
+{
+	Tree resultTree;
+	symDiffHelper(tree1.getRoot(), tree2, resultTree);
+	symDiffHelper(tree2.getRoot(), tree1, resultTree);
+
+	return resultTree;
+}
