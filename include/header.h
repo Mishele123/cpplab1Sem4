@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <vector>
 
 struct Node
 {
@@ -242,13 +242,16 @@ double Tree::measureSearchTime(size_t num_elements)
 	return total_time / 1000.0;
 }
 
-double Tree::measureInsertEraseTime(size_t num_elements) {
-	for (size_t i = 0; i < num_elements; ++i) {
+double Tree::measureInsertEraseTime(size_t num_elements) 
+{
+	for (size_t i = 0; i < num_elements; i++)
+	{
 		insert(lcg());
 	}
 	double total_time_add = 0.0;
 	double total_time_remove = 0.0;
-	for (int attempt = 0; attempt < 1000; ++attempt) {
+	for (int attempt = 0; attempt < 1000; attempt++) 
+	{
 		int key_to_add = lcg();
 		clock_t start_time_add = clock();
 		insert(key_to_add);
@@ -257,6 +260,75 @@ double Tree::measureInsertEraseTime(size_t num_elements) {
 		int key_to_remove = lcg();
 		clock_t start_time_remove = clock();
 		erase(key_to_remove);
+		clock_t end_time_remove = clock();
+		total_time_remove += static_cast<double>(end_time_remove - start_time_remove) / CLOCKS_PER_SEC;
+	}
+	double avg_time_add = total_time_add / 1000.0;
+	double avg_time_remove = total_time_remove / 1000.0;
+	return (avg_time_add + avg_time_remove) / 2.0;
+}
+
+
+// Для вектора
+double measureFillTimeVector(size_t num_elements) 
+{
+	double total_time = 0.0;
+	for (int attempt = 0; attempt < 100; attempt++) 
+	{
+		clock_t start_time = clock();
+		std::vector<int> vec;
+		for (size_t i = 0; i < num_elements; i++) 
+		{
+			vec.push_back(lcg());
+		}
+		clock_t end_time = clock();
+		total_time += static_cast<double>(end_time - start_time) / CLOCKS_PER_SEC;
+	}
+	return total_time / 100.0;
+}
+
+double measureSearchTimeVector(size_t num_elements) 
+{
+	std::vector<int> vec;
+	for (size_t i = 0; i < num_elements; i++) 
+	{
+		vec.push_back(lcg());
+	}
+	double total_time = 0.0;
+	for (int attempt = 0; attempt < 1000; attempt++) 
+	{
+		int key_to_find = lcg();
+		clock_t start_time = clock();
+		auto found = std::find(vec.begin(), vec.end(), key_to_find);
+		clock_t end_time = clock();
+		total_time += static_cast<double>(end_time - start_time) / CLOCKS_PER_SEC;
+	}
+	return total_time / 1000.0;
+}
+
+double measureInsertEraseVector(size_t num_elements) 
+{
+	std::vector<int> vec;
+	for (size_t i = 0; i < num_elements; i++) 
+	{
+		vec.push_back(lcg());
+	}
+	double total_time_add = 0.0;
+	double total_time_remove = 0.0;
+	for (int attempt = 0; attempt < 1000; attempt++) 
+	{
+		int key_to_add = lcg();
+		clock_t start_time_add = clock();
+		vec.push_back(key_to_add);
+		clock_t end_time_add = clock();
+		total_time_add += static_cast<double>(end_time_add - start_time_add) / CLOCKS_PER_SEC;
+		int key_to_remove = lcg();
+		clock_t start_time_remove = clock();
+		auto it = std::find(vec.begin(), vec.end(), key_to_remove);
+		if (it != vec.end()) 
+		{
+			vec.erase(it);
+		}
 		clock_t end_time_remove = clock();
 		total_time_remove += static_cast<double>(end_time_remove - start_time_remove) / CLOCKS_PER_SEC;
 	}
